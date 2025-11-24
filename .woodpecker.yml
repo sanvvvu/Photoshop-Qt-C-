@@ -1,0 +1,12 @@
+
+clone:
+  - name: git 
+    image: registry.gitflic.ru/project/formatc/woodpecker-git/plugin:2.6.0
+steps:
+  - name: build
+    image: ubuntu:22.04
+    commands:
+      - apt-get update
+      - apt-get install -y cmake qt6-base-dev mingw-w64 qt6-tools-dev-tools make g++
+      - qmake6
+      - make
