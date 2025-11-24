@@ -14,7 +14,10 @@ SOURCES += \
     Otsu.cpp \
     Huang.cpp \
     Niblack.cpp \
-    ISOMAD.cpp
+    ISOMAD.cpp \
+    SaveImageDialog.cpp \
+    Compression.cpp \
+    HelpDialog.cpp
 
 HEADERS += \
     MainWindow.h \
@@ -25,6 +28,9 @@ HEADERS += \
     Otsu.h \
     Huang.h \
     Niblack.h \
-    ISOMAD.h
+    ISOMAD.h \
+    SaveImageDialog.h \
+    Compression.h \
+    HelpDialog.h
 
 DESTDIR = build
