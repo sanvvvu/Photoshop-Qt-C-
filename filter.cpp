@@ -23,14 +23,14 @@ void filter2D(QImage &image, double *kernel, size_t kWidth, size_t kHeight) {
     }
 
     QImage src = image.convertToFormat(QImage::Format_ARGB32);
-    QImage dst(src.size(), QImage::Format_ARGB32);
+    QImage dst(src.size(), QImage::Format_ARGB32);      // через временную копию делаю
 
     const int w = src.width();
     const int h = src.height();
 
-    const int kW = static_cast<int>(kWidth);
+    const int kW = static_cast<int>(kWidth);      
     const int kH = static_cast<int>(kHeight);
-    const int kHalfW = kW / 2;
+    const int kHalfW = kW / 2;      // смещение вокруг центральной точки ядра
     const int kHalfH = kH / 2;
 
     std::vector<double> kbuf;
@@ -44,7 +44,7 @@ void filter2D(QImage &image, double *kernel, size_t kWidth, size_t kHeight) {
             double accumB = 0.0;
 
             for (int ky = 0; ky < kH; ++ky) {
-                int oy = ky - kHalfH;
+                int oy = ky - kHalfH;   // относительное смещение
                 int yy = reflect_idx(y + oy, h - 1);
                 const QRgb *srcLine = reinterpret_cast<const QRgb*>(src.constScanLine(yy));
 
@@ -100,6 +100,6 @@ void adjustContrast(QImage &image, double factor) {
             line[x] = qRgba(r, g, b, qAlpha(line[x]));
         }
     }
-    
+
     image = src;
 }
