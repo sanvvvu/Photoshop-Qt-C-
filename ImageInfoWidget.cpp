@@ -2,7 +2,7 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QString>
-#include <algorithm> // для std::min/std::max
+#include <algorithm>
 
 ImageInfoWidget::ImageInfoWidget(QWidget *parent)
     : QWidget(parent), m_label(new QLabel(this))
@@ -10,6 +10,7 @@ ImageInfoWidget::ImageInfoWidget(QWidget *parent)
     auto layout = new QVBoxLayout(this);
     layout->addWidget(m_label);
     m_label->setText(QObject::tr("No image"));
+    m_label->setWordWrap(true);
 }
 
 void ImageInfoWidget::setImage(const QImage &image) {
@@ -25,7 +26,7 @@ void ImageInfoWidget::updateInfo(const QImage &image) {
     int w = image.width();
     int h = image.height();
     QString fmt = image.format() == QImage::Format_ARGB32 ? "ARGB32" : QString::number(image.format());
-    
+
     // преобразуем в ARGB32 для простоты работы
     QImage tmp = image.convertToFormat(QImage::Format_ARGB32);
 
@@ -48,7 +49,7 @@ void ImageInfoWidget::updateInfo(const QImage &image) {
     double avgR = double(sumR) / pixels;
     double avgG = double(sumG) / pixels;
     double avgB = double(sumB) / pixels;
-    
+
     QString info = QString(QObject::tr(
         "Размер: %1 x %2\n"
         "Формат: %3\n"
@@ -60,5 +61,6 @@ void ImageInfoWidget::updateInfo(const QImage &image) {
         .arg(avgR, 0, 'f', 1).arg(avgG, 0, 'f', 1).arg(avgB, 0, 'f', 1)
         .arg(minR).arg(minG).arg(minB)
         .arg(maxR).arg(maxG).arg(maxB);
+
     m_label->setText(info);
 }
