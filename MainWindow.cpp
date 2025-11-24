@@ -23,6 +23,8 @@
 #include <QFuture>
 #include <QFutureWatcher>
 #include <QMessageBox>
+#include <QToolBar>
+#include <QAction>
 
 #include "GrayscaleBT601.h"
 #include "GrayscaleBT709.h"
@@ -30,6 +32,9 @@
 #include "Huang.h"
 #include "Niblack.h"
 #include "ISOMAD.h"
+
+#include "SaveImageDialog.h"
+#include "HelpDialog.h" 
 
 // пресеты
 static double box3x3[] = {
@@ -85,6 +90,14 @@ void MainWindow::setupUi() {
         QComboBox, QSpinBox, QDoubleSpinBox, QTableWidget { background: #ffffff; }
     )";
     setStyleSheet(style);
+
+    // иконка справки
+    QToolBar *tb = addToolBar(tr("Помощь"));
+    tb->setMovable(false);
+    QAction *helpAction = new QAction(tr("?"), this);
+    helpAction->setToolTip(tr("О справке по сжатиям TIFF"));
+    tb->addAction(helpAction);
+    connect(helpAction, &QAction::triggered, this, &MainWindow::onShowCompressionHelp);
 
     m_central = new QWidget(this);
     setCentralWidget(m_central);
@@ -356,7 +369,7 @@ void MainWindow::onApplyClicked() {
         return;
     }
 
-    // Новые функции для конвертации в полутоновый и бинаризации
+    // функции для конвертации в полутоновый и бинаризации
     if (sel.contains(tr("Полутоновый BT.601-7"))) {
         QImage img = m_currentImage;
         QFutureWatcher<void> *watcher = new QFutureWatcher<void>(this);
@@ -473,17 +486,19 @@ void MainWindow::onApplyClicked() {
         return;
 
     } else {
-        // неизвестный пункт — ничего не делаю
+        // неизвестный пункт - ничего не делаю
     }
 }
 
 void MainWindow::onSaveClicked() {
     if (m_currentImage.isNull()) return;
-    QString fileName = QFileDialog::getSaveFileName(this, tr("Сохранить изображение"), QString(),
-                                                    tr("PNG Image (*.png)"));
-    if (!fileName.isEmpty()) {
-        if (!fileName.endsWith(".png", Qt::CaseInsensitive)) fileName += ".png";
-        m_currentImage.save(fileName, "PNG");
+
+    // используем диалог сохранения (PNG/TIFF и опции сжатия)
+    bool saved = saveImageWithDialog(m_currentImage, this);
+    if (saved) {
+        statusBar()->showMessage(tr("Изображение сохранено"), 3000);
+    } else {
+        statusBar()->showMessage(tr("Сохранение отменено / не удалось"), 3000);
     }
 }
 
@@ -563,3 +578,7 @@ void MainWindow::setProgress(int percent) {
     m_progressBar->setValue(percent);
 }
 
+void MainWindow::onShowCompressionHelp() {
+    HelpDialog dlg(this);
+    dlg.exec();
+}
