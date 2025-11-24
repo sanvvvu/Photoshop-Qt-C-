@@ -57,12 +57,15 @@ private:
 private slots:
     void onLoadClicked();
     void onApplyClicked();
-    void onApply(); // Реализация нужна для moc/линкера
+    void onApply(); // реализация нужна для moc/линкера
     void onSaveClicked();
     void onResetClicked();
     void onFilterChanged(const QString &text);
     void onKernelSizeChanged(int newSize);
     void setProgress(int percent);
+
+    // новый слот — открыть окно справки о сжатиях
+    void onShowCompressionHelp();
 };
 
 #endif
