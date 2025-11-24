@@ -16,4 +16,4 @@ class ImageInfoWidget : public QWidget{
     void updateInfo(const QImage &image);
 };
 
-#endif // IMAGEINFOWIDGET_H
+#endif
